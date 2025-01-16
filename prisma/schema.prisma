@@ -1,0 +1,22 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model CrawledNews {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  regionCode  String
+  title       String
+  link        String   @unique
+  source      String
+  category    String[]
+  publishedAt String
+  createdAt   DateTime @default(now())
+  images      String[]
+  content     String
+}
+
