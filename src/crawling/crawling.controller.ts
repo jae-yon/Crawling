@@ -6,7 +6,7 @@ export class CrawlingController {
   constructor(private readonly crawlingService: CrawlingService) {}
 
   @Get()
-  async getNaverNews(): Promise<any> {
-    return await this.crawlingService.crawlNaverNews();
+  async getCrawledNews(): Promise<any> {
+    return await this.crawlingService.crawling();
   }
 }

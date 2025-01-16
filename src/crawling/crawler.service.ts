@@ -2,8 +2,8 @@ import { Injectable, Logger } from "@nestjs/common";
 import * as puppeteer from 'puppeteer';
 
 @Injectable()
-export class PagingService {
-  private readonly logger = new Logger(PagingService.name);
+export class CrawlerService {
+  private readonly logger = new Logger(CrawlerService.name);
   // 크롤링 모듈 선언 및 초기화
   private browser: puppeteer.Browser;
   // 브라우저 초기화
