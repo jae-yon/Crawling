@@ -19,4 +19,3 @@ model CrawledNews {
   images      String[]
   content     String
 }
-
