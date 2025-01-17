@@ -27,15 +27,11 @@ export class CrawlingService {
 
   async crawling() {
     const data = await this.crawlingNews();
-    if (data.length) {
-      await this.crawlingRepository.createCrawledNewsByPrisma(data);
-    }
-    return this.crawlingRepository.getCrawledNewsByPrisma();
+    if (data.length) return await this.crawlingRepository.createCrawledNewsByMongoose(data);
   }
 
   // 뉴스 섹션 크롤링 (네이버 뉴스 기준)
   async crawlingNews(): Promise<any> {
-
     const crawlingResultData: CrawledNews[] = [];
     // 브라우저 초기화
     const browser = await this.crawlerService.initBrowser();
@@ -61,19 +57,17 @@ export class CrawlingService {
         const crawlingNewsDetail = await Promise.all(crawlingNews.map(news => {
           return this.queue.add(async() => this.crawlingNewsDetail(browser, news));
         }));
-        // 크롤링 최종 결과 배열에 저장
         crawlingResultData.push(...crawlingNewsDetail.filter(news => news !== null));
       }
       // 크롤링 결과 확인
-      this.logger.log(`Number of successfully crawled data: ${crawlingResultData.length}`);
+      this.logger.log(`Number of successfully crawled ${crawlingResultData.length} item`);
+      // 최종 크롤링 데이터 반환
+      return crawlingResultData;
     } catch (error) {
       this.logger.error(`Error during crawling: ${error.message}`);
     } finally {
       await this.crawlerService.closeBrowser(browser);
     }
-
-    return crawlingResultData;
-    
   }
   // 뉴스 기사 크롤링 (네이버 기사 기준)
   async crawlingNewsDetail(browser: puppeteer.Browser, news: any): Promise<any> {
@@ -104,7 +98,6 @@ export class CrawlingService {
     } catch (error) {
       this.logger.error(`Error crawling article: ${news.url}`, error.message);
     } finally {
-      // 페이지 닫기
       await page.close();
     }
   }
