@@ -4,6 +4,7 @@ import { CrawledNews as prismaEntity, Prisma } from "@prisma/client";
 import { PrismaService } from "prisma/prisma.service";
 import { CrawledNews as mongooseEntity } from "./schemas/crawling.schema";
 import { Model } from "mongoose";
+import * as dayjs from "dayjs";
 
 @Injectable()
 export class CrawlingRepository {
@@ -17,7 +18,7 @@ export class CrawlingRepository {
   async createCrawledNewsByMongoose(dataArray: mongooseEntity[]): Promise<mongooseEntity[]> {
     const result: mongooseEntity[] = [];
     try {
-      this.logger.log(`Create ${dataArray.length} item to the database by mongoose`);
+      this.logger.log(`Create ${dataArray.length} items to the database by mongoose`);
       for (const data of dataArray) {
         await this.crawledNews.findOneAndUpdate(
           { link: data.link },
@@ -29,6 +30,17 @@ export class CrawlingRepository {
       return result;
     } catch (error) {
       this.logger.error(`Failed to create data: ${error.message}`);
+      throw error;
+    }
+  }
+
+  async getCrawledNewsByMongoose(dateStart: string, dateEnd: string): Promise<mongooseEntity[]> {
+    const startDate = dayjs(dateStart).format('YYYY-MM-DD');
+    const endDate = dayjs(dateEnd).format('YYYY-MM-DD');
+    try {
+      return await this.crawledNews.find({ createdAt: { $gte: startDate, $lte: endDate },}).lean().exec();
+    } catch (error) {
+      this.logger.error(`Failed to fetch data: ${error.message}`);
       throw error;
     }
   }
