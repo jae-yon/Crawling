@@ -10,7 +10,7 @@ export class CrawlingController {
   ) {}
 
   @Get()
-  async getCrawledNews(): Promise<any> {
+  async getCrawledNews() {
     return await this.crawlingService.crawling();
   }
 

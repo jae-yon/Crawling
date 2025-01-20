@@ -15,6 +15,10 @@ export class CrawlingRepository {
 
   private readonly logger = new Logger(CrawlingRepository.name);
 
+  async testCrawledNewsByMongoose(): Promise<mongooseEntity> {
+    return await this.crawledNews.findOne().sort({ createdAt: -1 });
+  }
+
   async createCrawledNewsByMongoose(dataArray: mongooseEntity[]): Promise<mongooseEntity[]> {
     const result: mongooseEntity[] = [];
     try {

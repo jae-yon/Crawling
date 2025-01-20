@@ -6,7 +6,6 @@ import { UtilService } from './util.service';
 import { CrawlerService } from './crawler.service';
 import { CrawlingRepository } from './crawling.repository';
 
-
 @Injectable()
 export class CrawlingService {
   constructor(
@@ -28,7 +27,10 @@ export class CrawlingService {
 
   async crawling() {
     const data = await this.crawlingNews();
-    if (data.length) return await this.crawlingRepository.createCrawledNewsByMongoose(data);
+    if (data.length) {
+      const saveCrawledData = await this.crawlingRepository.createCrawledNewsByMongoose(data);
+      this.logger.log(`Successfully processed ${saveCrawledData.length} items`); 
+    }
   }
 
   // 뉴스 섹션 크롤링 (네이버 뉴스 기준)
@@ -61,7 +63,7 @@ export class CrawlingService {
         crawlingResultData.push(...crawlingNewsDetail.filter(news => news !== null));
       }
       // 크롤링 결과 확인
-      this.logger.log(`Crawled ${crawlingResultData.length} items on the browser`);
+      this.logger.log(`Successfully crawled ${crawlingResultData.length} items`);
       // 최종 크롤링 데이터 반환
       return crawlingResultData;
     } catch (error) {
@@ -101,11 +103,5 @@ export class CrawlingService {
     } finally {
       await page.close();
     }
-  }
-
-  // 랜덤 딜레이 (1~3초)
-  async randomDelay() {
-    const randomTime = Math.floor(Math.random() * (3000 - 1000 + 1)) + 1000;
-    return new Promise(resolve => setTimeout(resolve, randomTime));
   }
 }
