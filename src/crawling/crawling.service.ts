@@ -1,7 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { CrawledNews } from '@prisma/client';
 import * as puppeteer from 'puppeteer';
-
 import { UtilService } from './util.service';
 import { CrawlerService } from './crawler.service';
 import { CrawlingRepository } from './crawling.repository';
