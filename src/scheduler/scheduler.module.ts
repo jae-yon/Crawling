@@ -1,9 +1,13 @@
 import { Module } from '@nestjs/common';
-import { SchedulerController } from './scheduler.controller';
+import { ScheduleModule } from '@nestjs/schedule';
 import { SchedulerService } from './scheduler.service';
+import { CrawlingModule } from 'src/crawling/crawling.module';
 
 @Module({
-  controllers: [SchedulerController],
+  imports: [
+    CrawlingModule,
+    ScheduleModule.forRoot()
+  ],
   providers: [SchedulerService]
 })
 export class SchedulerModule {}

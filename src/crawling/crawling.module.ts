@@ -13,13 +13,16 @@ import { CrawledNews, CrawledNewsSchema } from './schemas/crawling.schema';
     PrismaModule,
     MongooseModule.forFeature([{ name: CrawledNews.name, schema: CrawledNewsSchema }]),
   ],
+  exports: [
+    CrawlingService,
+    CrawlingRepository,
+  ],
   providers: [
     UtilService,
     CrawlerService,
     CrawlingService,
     CrawlingRepository,
   ],
-  exports: [CrawlingService],
   controllers: [CrawlingController],
 })
 export class CrawlingModule {}

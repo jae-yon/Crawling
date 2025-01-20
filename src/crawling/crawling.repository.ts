@@ -15,10 +15,6 @@ export class CrawlingRepository {
 
   private readonly logger = new Logger(CrawlingRepository.name);
 
-  async testCrawledNewsByMongoose(): Promise<mongooseEntity> {
-    return await this.crawledNews.findOne().sort({ createdAt: -1 });
-  }
-
   async createCrawledNewsByMongoose(dataArray: mongooseEntity[]): Promise<mongooseEntity[]> {
     const result: mongooseEntity[] = [];
     try {
@@ -36,6 +32,10 @@ export class CrawlingRepository {
       this.logger.error(`Failed to create data: ${error.message}`);
       throw error;
     }
+  }
+
+  async getLatestCrawledNewsByMongoose(): Promise<mongooseEntity> {
+    return await this.crawledNews.findOne().sort({ createdAt: -1 });
   }
 
   async getCrawledNewsByMongoose(dateStart: string, dateEnd: string): Promise<mongooseEntity[]> {
