@@ -14,12 +14,12 @@ export class SchedulerService {
   @Cron(CronExpression.EVERY_10_SECONDS)
   async getCrawledNews() {
     const news = await this.crawlingRepository.getLatestCrawledNewsByMongoose();
-    this.logger.debug(`Get latest crawled news data:\n${news}`);
+    this.logger.debug(`Scheduler service has been activated every 10 seconds\n${news}`);
   }
 
   @Cron(CronExpression.EVERY_DAY_AT_NOON)
   async startCrawling() {
-    this.logger.debug(`The crawling service has been activated`);
+    this.logger.debug(`Scheduler service has been activated every day at noon`);
     await this.crawlingService.crawling();
   }
 }

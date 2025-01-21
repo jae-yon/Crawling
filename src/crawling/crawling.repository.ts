@@ -15,6 +15,10 @@ export class CrawlingRepository {
 
   private readonly logger = new Logger(CrawlingRepository.name);
 
+  async getLatestCrawledNewsByMongoose(): Promise<mongooseEntity> {
+    return await this.crawledNews.findOne().sort({ createdAt: -1 });
+  }
+
   async createCrawledNewsByMongoose(dataArray: mongooseEntity[]): Promise<mongooseEntity[]> {
     const result: mongooseEntity[] = [];
     try {
@@ -34,8 +38,16 @@ export class CrawlingRepository {
     }
   }
 
-  async getLatestCrawledNewsByMongoose(): Promise<mongooseEntity> {
-    return await this.crawledNews.findOne().sort({ createdAt: -1 });
+  async deleteCrawledNewsByMongoose(): Promise<number> {
+    const daysAgo = new Date();
+    daysAgo.setDate(daysAgo.getDate() - 1);
+    try {
+      const result = await this.crawledNews.deleteMany({ createdAt: { $lt: daysAgo } });
+      return result.deletedCount || 0;
+    } catch (error) {
+      this.logger.error(`Failed to delete data: ${error.message}`);
+      throw error;
+    }
   }
 
   async getCrawledNewsByMongoose(dateStart: string, dateEnd: string): Promise<mongooseEntity[]> {

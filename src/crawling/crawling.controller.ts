@@ -1,4 +1,4 @@
-import { Body, Controller, Get } from '@nestjs/common';
+import { Body, Controller, Delete, Get } from '@nestjs/common';
 import { CrawlingService } from './crawling.service';
 import { CrawlingRepository } from './crawling.repository';
 
@@ -18,5 +18,10 @@ export class CrawlingController {
   async getCrawledData(@Body() data: { dateStart: string; dateEnd: string }) {
     const { dateStart, dateEnd } = data;
     return await this.crawlingRepository.getCrawledNewsByMongoose(dateStart, dateEnd);
+  }
+
+  @Delete('news')
+  async deleteCrawledNews() {
+    return await this.crawlingRepository.deleteCrawledNewsByMongoose();
   }
 }
