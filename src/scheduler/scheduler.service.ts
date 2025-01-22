@@ -11,15 +11,16 @@ export class SchedulerService {
   ) {}
   private readonly logger = new Logger(SchedulerService.name);
 
-  @Cron(CronExpression.EVERY_10_SECONDS)
-  async getCrawledNews() {
-    const news = await this.crawlingRepository.getLatestCrawledNewsByMongoose();
-    this.logger.debug(`Scheduler service has been activated every 10 seconds\n${news}`);
-  }
+  // @Cron(CronExpression.EVERY_10_SECONDS)
+  // async getCrawledNews() {
+  //   const news = await this.crawlingRepository.getLatestCrawledNewsByMongoose();
+  //   this.logger.debug(`Scheduler service has been activated every 10 seconds\n${news}`);
+  // }
 
-  @Cron(CronExpression.EVERY_DAY_AT_NOON)
+  @Cron(CronExpression.EVERY_DAY_AT_3PM)
   async startCrawling() {
     this.logger.debug(`Scheduler service has been activated every day at noon`);
+    await this.crawlingRepository.deleteCrawledNewsByMongoose();
     await this.crawlingService.crawling();
   }
 }
