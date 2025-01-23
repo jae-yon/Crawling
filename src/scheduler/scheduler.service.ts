@@ -17,9 +17,9 @@ export class SchedulerService {
   //   this.logger.debug(`Scheduler service has been activated every 10 seconds\n${news}`);
   // }
 
-  @Cron(CronExpression.EVERY_DAY_AT_3PM)
+  @Cron(CronExpression.EVERY_DAY_AT_NOON)
   async startCrawling() {
-    this.logger.debug(`Scheduler service has been activated every day at noon`);
+    this.logger.debug(`Scheduler service has been activated`);
     await this.crawlingRepository.deleteCrawledNewsByMongoose();
     await this.crawlingService.crawling();
   }

@@ -22,7 +22,6 @@ export class CrawlingRepository {
   async createCrawledNewsByMongoose(dataArray: mongooseEntity[]): Promise<mongooseEntity[]> {
     const result: mongooseEntity[] = [];
     try {
-      this.logger.log(`Create ${dataArray.length} items to the database by mongoose`);
       for (const data of dataArray) {
         await this.crawledNews.findOneAndUpdate(
           { link: data.link },
@@ -40,7 +39,7 @@ export class CrawlingRepository {
 
   async deleteCrawledNewsByMongoose(): Promise<number> {
     const daysAgo = new Date();
-    daysAgo.setDate(daysAgo.getDate() - 1);
+    daysAgo.setDate(daysAgo.getDate() - 30);
     try {
       const result = await this.crawledNews.deleteMany({ createdAt: { $lt: daysAgo } });
       return result.deletedCount || 0;

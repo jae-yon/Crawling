@@ -1,4 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { CrawledNews } from '@prisma/client';
 import * as puppeteer from 'puppeteer';
 import { UtilService } from './util.service';
@@ -9,20 +10,14 @@ import { CrawlingRepository } from './crawling.repository';
 export class CrawlingService {
   constructor(
     private readonly utilService: UtilService,
+    private readonly configService: ConfigService,
     private readonly crawlerService: CrawlerService,
     private readonly crawlingRepository: CrawlingRepository,
   ) {}
 
   private readonly logger = new Logger(CrawlingService.name);
 
-  private readonly links = [
-    'https://news.naver.com/section/100',
-    'https://news.naver.com/section/101',
-    'https://news.naver.com/section/102',
-    'https://news.naver.com/section/103',
-    'https://news.naver.com/section/104',
-    'https://news.naver.com/section/105',
-  ];
+  private readonly links = this.configService.get<string>('CRWALING_URL').split(', ');
 
   async crawling() {
     const data = await this.crawlingNews();
