@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Logger, Module } from '@nestjs/common';
 import { ScheduleModule } from '@nestjs/schedule';
 import { SchedulerService } from './scheduler.service';
 import { CrawlingModule } from 'src/crawling/crawling.module';
@@ -8,6 +8,6 @@ import { CrawlingModule } from 'src/crawling/crawling.module';
     CrawlingModule,
     ScheduleModule.forRoot()
   ],
-  providers: [SchedulerService]
+  providers: [SchedulerService, Logger],
 })
 export class SchedulerModule {}

@@ -11,7 +11,7 @@ export class SchedulerService {
     private readonly crawlingRepository: CrawlingRepository,
   ) {}
 
-  @Cron(CronExpression.EVERY_DAY_AT_4PM)
+  @Cron(CronExpression.EVERY_DAY_AT_2PM)
   async startCrawling() {
     this.logger.debug(`Scheduler service has been activated`);
     await this.crawlingRepository.deleteCrawledNewsByMongoose();
