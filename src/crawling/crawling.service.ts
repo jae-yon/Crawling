@@ -2,14 +2,14 @@ import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { CrawledNews } from '@prisma/client';
 import * as puppeteer from 'puppeteer';
-import { UtilService } from './util.service';
+import { CrawlingUtil } from './crawling.util';
 import { CrawlerService } from './crawler.service';
 import { CrawlingRepository } from './crawling.repository';
 
 @Injectable()
 export class CrawlingService {
   constructor(
-    private readonly utilService: UtilService,
+    private readonly crawlingUtil: CrawlingUtil,
     private readonly configService: ConfigService,
     private readonly crawlerService: CrawlerService,
     private readonly crawlingRepository: CrawlingRepository,
@@ -39,7 +39,7 @@ export class CrawlingService {
         const page = await this.crawlerService.initPage(browser);
         // 페이지 이동
         await page.goto(link, { waitUntil: 'networkidle2', timeout: 30000 });
-        await this.utilService.setDelay();
+        await this.crawlingUtil.setDelay();
         // 페이지 크롤링
         const crawlingNews = await page.evaluate(() => {
           const newsList = document.querySelectorAll('.sa_item._SECTION_HEADLINE .sa_text_title');
@@ -51,7 +51,7 @@ export class CrawlingService {
         });
         await page.close();
         // 상세 페이지 크롤링
-        const crawlingNewsDetail = await this.utilService.setQueue(
+        const crawlingNewsDetail = await this.crawlingUtil.setQueue(
           crawlingNews.map((news) => async () => this.crawlingNewsDetail(browser, news))
         );
         crawlingResultData.push(...crawlingNewsDetail.filter(news => news !== null));
@@ -75,7 +75,7 @@ export class CrawlingService {
       await page.goto(news.link, { waitUntil: 'networkidle2', timeout: 30000 });
       // 다운 스크롤
       await page.evaluate(() => { window.scrollTo(0, document.body.scrollHeight) });
-      await this.utilService.setDelay();
+      await this.crawlingUtil.setDelay();
       // 페이지 크롤링
       const crawlingNews = await page.evaluate(() => {
         const source = document.querySelector('.media_end_head_top_logo_img')?.getAttribute('title') || null;

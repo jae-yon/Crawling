@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import PQueue from '@esm2cjs/p-queue';
 
 @Injectable()
-export class UtilService {
+export class CrawlingUtil {
   private readonly queue = new PQueue({ concurrency: 5 });
 
   async setQueue<T>(tasks: Array<() => Promise<T>>): Promise<T[]> {

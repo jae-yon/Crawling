@@ -4,7 +4,7 @@ import { CrawledNews as prismaEntity, Prisma } from "@prisma/client";
 import { PrismaService } from "prisma/prisma.service";
 import { CrawledNews as mongooseEntity } from "./schemas/crawling.schema";
 import { Model } from "mongoose";
-import dayjs from "dayjs";
+import * as dayjs from "dayjs";
 
 @Injectable()
 export class CrawlingRepository {
