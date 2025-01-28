@@ -1,6 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { CrawledNews } from '@prisma/client';
 import * as puppeteer from 'puppeteer';
 import { CrawlingUtil } from './crawling.util';
 import { CrawlerService } from './crawler.service';
@@ -29,7 +28,7 @@ export class CrawlingService {
 
   // 뉴스 섹션 크롤링 (네이버 뉴스 기준)
   async crawlingNews(): Promise<any> {
-    const crawlingResultData: CrawledNews[] = [];
+    const crawlingResultData = [];
     // 브라우저 초기화
     const browser = await this.crawlerService.initBrowser();
 
